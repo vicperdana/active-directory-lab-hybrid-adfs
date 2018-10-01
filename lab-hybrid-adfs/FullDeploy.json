@@ -319,7 +319,7 @@
       "dependsOn": [
         "virtualNetworkDNSUpdate",
         "adVMs",
-        "adDSC"
+        "[concat('Microsoft.Compute/virtualMachines/extensions', variables('adVMName'),'/Microsoft.Powershell.DSC')]"
       ],
       "properties": {
         "mode": "Incremental",
