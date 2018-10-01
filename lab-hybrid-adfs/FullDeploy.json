@@ -317,7 +317,9 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "virtualNetworkDNSUpdate"
+        "virtualNetworkDNSUpdate",
+        "adVMs",
+        "adDSC"
       ],
       "properties": {
         "mode": "Incremental",
@@ -475,7 +477,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "virtualNetworkDNSUpdate"
+        "virtualNetworkDNSUpdate",
+        "adVMs"
       ],
       "properties": {
         "mode": "Incremental",
