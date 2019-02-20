@@ -1,4 +1,4 @@
-﻿param (
+﻿<#param (
     [Parameter(Mandatory)]
     [string]$DCFQDN,
 
@@ -13,7 +13,12 @@
 
 	[Parameter(Mandatory)]
 	[string]$WapFqdn
-)
+)#>
+$DCFQDN = "EUCDC.euc.lab"
+$adminuser ="didata"
+$password = 'R0^@uTj9C@HL'
+$instance = 1
+$WapFqdn = "euc1-adfs1.eastus.cloudapp.azure.com"
 
 $ErrorActionPreference = "Stop"
 $arr = $DCFQDN.split('.')
@@ -117,4 +122,13 @@ if (!(Test-Path -Path "$($completeFile)3")) {
     #record that we got this far
     New-Item -ItemType file "$($completeFile)3"
 }
+
+#.\CopyCertToWAP.ps1 -dcfqdn EUCDC.euc.lab -adminuser didata -password 'R0^@uTj9C@HL' -instance 1 -wapfqdn euc1-adfs1.eastus.cloudapp.azure.com
+<#
+$DCFQDN = "EUCDC.euc.lab"
+$adminuser ="didata"
+$password = 'R0^@uTj9C@HL'
+$instance = 1
+$WapFqdn = "euc1-adfs1.eastus.cloudapp.azure.com"
+#>
 

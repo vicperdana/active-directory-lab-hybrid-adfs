@@ -7,14 +7,10 @@ configuration DomainController
         [Parameter(Mandatory)]
         [String]$Subject,
 
-        [Parameter(Mandatory)]
-        [Int]$ADFSFarmCount,
 
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$AdminCreds,
 
-        [Parameter(Mandatory)]
-        [String]$ADFSIPAddress,
 
 		[Parameter(Mandatory)]
 		[Object]$usersArray,
@@ -33,11 +29,7 @@ configuration DomainController
     $CARootName     = "$($shortDomain.ToLower())-$($ComputerName.ToUpper())-CA"
     $CAServerFQDN   = "$ComputerName.$DomainName"
 
-	# NOTE: see adfsDeploy.json variable block to see how the internal IP is constructed 
-	#       (punting and reproducing logic here)
-	$adfsNetworkArr         = $ADFSIPAddress.Split('.')
-	$adfsStartIpNodeAddress = [int]$adfsNetworkArr[3]
-	$adfsNetworkString      = "$($adfsNetworkArr[0]).$($adfsNetworkArr[1]).$($adfsNetworkArr[2])."
+	
 
     $CertPw         = $AdminCreds.Password
     $ClearPw        = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($CertPw))
@@ -134,71 +126,6 @@ configuration DomainController
 			}
 			GetScript = { @{} }
 			DependsOn = '[xADCSWebEnrollment]CertSrv'
-		}
-
-        for($instance=1; $instance -le $ADFSFarmCount; $instance++) {
-
-			xCertReq "SSLCert$instance"
-			{
-				CARootName                = "$CARootName"
-				CAServerFQDN              = "$ComputerName.$DomainName"
-				Subject                   = "$Subject" -f $instance
-				KeyLength                 = 2048
-				Exportable                = $true
-				ProviderName              = '"Microsoft RSA SChannel Cryptographic Provider"'
-				OID                       = '1.3.6.1.5.5.7.3.1'
-				KeyUsage                  = '0xa0'
-				CertificateTemplate       = 'WebServer'
-				AutoRenew                 = $true
-				Credential                = $DomainCreds
-				DependsOn                 = '[xADCSWebEnrollment]CertSrv'
-			}
-
-			Script "SaveCert$instance"
-			{
-				SetScript  = {
-								 $s = $using:subject;
-								 $s = $s -f $using:instance
-								 write-verbose "subject = $s";
-								 $cert = Get-ChildItem Cert:\LocalMachine\My | where {$_.Subject -eq "CN=$s"}
-								 Export-PfxCertificate -FilePath "c:\src\$s.pfx" -Cert $cert -Password (ConvertTo-SecureString $Using:ClearPw -AsPlainText -Force)
-							 }
-
-				GetScript  = { @{ 
-									$s = $using:subject;
-									$s = $s -f $using:instance
-									Result = (Get-Content "C:\src\$s.pfx") } 
-								}
-				TestScript = {
-								$s = $using:subject;
-								$s = $s -f $using:instance
-								return Test-Path "C:\src\$s.pfx" 
-							 }
-				DependsOn  = "[xCertReq]SSLCert$instance"
-			}
-
-			Script "UpdateDNS$instance"
-			{
-				SetScript  = {
-								$NodeAddr  = ([int]$($using:instance) + [int]$($using:adfsStartIpNodeAddress)) - 1
-								$IPAddress = "$($using:adfsNetworkString)$NodeAddr"
-
-								$s        = $using:subject;
-								$s        = $s -f $using:instance
-								$ZoneName = $s
-								$Zone     = Add-DnsServerPrimaryZone -Name $ZoneName -ReplicationScope Forest -PassThru
-								$rec      = Add-DnsServerResourceRecordA -ZoneName $ZoneName -Name "@" -AllowUpdateAny -IPv4Address $IPAddress
-							 }
-
-				GetScript =  { @{} }
-				TestScript = { 
-					$s        = $using:subject;
-					$s        = $s -f $using:instance
-					$ZoneName = $s
-					$Zone = Get-DnsServerZone -Name $ZoneName -ErrorAction SilentlyContinue
-					return ($Zone -ine $null)
-				}
-			}
 		}
 
         Script InstallAADConnect
