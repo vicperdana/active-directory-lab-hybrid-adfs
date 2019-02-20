@@ -67,8 +67,8 @@ $parms=@{
     "cliSubnetAddressRange"       = "10.$VNetAddrSpace2ndOctet.3.0/24";
     #if multiple deployments will need to route between vNets, be sure to make this distinct between them
     "deploymentNumber"            = $VNetAddrSpace2ndOctet;
-    "clientsToDeploy"             = $clientsToDeploy;
-    "clientImageBaseResource"     = $clientImageBaseResource;
+    #"clientsToDeploy"             = $clientsToDeploy;
+    #"clientImageBaseResource"     = $clientImageBaseResource;
     #"AdfsFarmCount"               = $AdfsFarmCount;
     "usersArray"                  = $usersArray;
     "defaultUserPassword"         = "P@ssw0rd";
