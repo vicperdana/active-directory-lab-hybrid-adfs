@@ -4,22 +4,22 @@ Write-Host "Beginning deployment at $starttime"
 Import-Module Azure -ErrorAction SilentlyContinue
 
 #DEPLOYMENT OPTIONS
-    $templateToDeploy        = "FullDeploy.json"
+    $templateToDeploy        = "NoClientDeploy.json"
     # MUST be unique for all your simultaneous/co-existing deployments of this ADName in the same region
     $VNetAddrSpace2ndOctet   = "1"
 
     # Must be unique for simultaneous/co-existing deployments
     #"master" or "dev"
-    $RGName                  = "rg-ddlabtest1"
+    $RGName                  = "rg-ddlabtest"
     $DeployRegion            = "eastus"
 
     $Branch                  = "master"
-    $AssetLocation           = "https://raw.githubusercontent.com/Azure-Samples/active-directory-lab-hybrid-adfs/$Branch/lab-hybrid-adfs/"
-    #$AssetLocation           = "https://raw.githubusercontent.com/vicperdana/active-directory-lab-hybrid-adfs/$branch/lab-hybrid-adfs/"
+    #$AssetLocation           = "https://raw.githubusercontent.com/Azure-Samples/active-directory-lab-hybrid-adfs/$Branch/lab-hybrid-adfs/"
+    $AssetLocation           = "https://raw.githubusercontent.com/vicperdana/active-directory-lab-hybrid-adfs/master/lab-hybrid-phs/"
 
     $userName                = "didata"
     $secpasswd               = 'Pass1234##!!'
-    $adDomainName            = "euc112.lab"
+    $adDomainName            = "euc11.lab"
     $usersArray              = @(
                                 @{ "FName"= "Bob";  "LName"= "Jones";    "SAM"= "bjones" },
                                 @{ "FName"= "Bill"; "LName"= "Smith";    "SAM"= "bsmith" },
@@ -61,7 +61,7 @@ $parms=@{
     #The first IP deployed in the AD subnet, for the DC
     "adIP"                        = "10.$VNetAddrSpace2ndOctet.1.4";
     #The first ADFS server deployed in the AD subnet - multiple farms will increment beyond this
-    "adfsIP"                      = "10.$VNetAddrSpace2ndOctet.1.5";
+    #"adfsIP"                      = "10.$VNetAddrSpace2ndOctet.1.5";
     "adSubnetAddressRange"        = "10.$VNetAddrSpace2ndOctet.1.0/24";
     "dmzSubnetAddressRange"       = "10.$VNetAddrSpace2ndOctet.2.0/24";
     "cliSubnetAddressRange"       = "10.$VNetAddrSpace2ndOctet.3.0/24";
@@ -69,7 +69,7 @@ $parms=@{
     "deploymentNumber"            = $VNetAddrSpace2ndOctet;
     "clientsToDeploy"             = $clientsToDeploy;
     "clientImageBaseResource"     = $clientImageBaseResource;
-    "AdfsFarmCount"               = $AdfsFarmCount;
+    #"AdfsFarmCount"               = $AdfsFarmCount;
     "usersArray"                  = $usersArray;
     "defaultUserPassword"         = "P@ssw0rd";
 }
@@ -98,7 +98,7 @@ if ($deployment) {
         . $tempfile
     }
 
-    $RDPFolder = "$env:USERPROFILE\desktop\$RGName\"
+    <#$RDPFolder = "$env:USERPROFILE\desktop\$RGName\"
     if (!(Test-Path -Path $RDPFolder)) {
         md $RDPFolder
     }
@@ -119,9 +119,9 @@ if ($deployment) {
                 $Shortcut.Save()
             }
         }
-    }
+    }#>
 
-    start $RDPFolder
+    #start $RDPFolder
 }
 
 $endTime=Get-Date
