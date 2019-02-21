@@ -102,6 +102,8 @@
     "adDSCTemplate": "[concat(parameters('assetLocation'),'DSC/adDSC.zip')]",
     "CopyCertToWAPTemplate": "CopyCertToWAP.ps1",
     "CopyCertToWAPTemplateUri": "[concat(parameters('assetLocation'), 'Scripts/CopyCertToWAP.ps1')]",
+    "publicIPAddressDNSName": "[tolower(concat(variables('companyNamePrefix'),parameters('deploymentNumber'),'-adfs'))]",
+    "WAPPubIpDnsFQDN": "[concat(variables('publicIPAddressDNSName'),'{0}.', toLower(replace(resourceGroup().location,' ','')),'.cloudapp.azure.com')]",    
     "adDSCConfigurationFunction": "adDSCConfiguration.ps1\\DomainController",
     "subnets": [
       {
@@ -230,6 +232,11 @@
           "modulesUrl": "[variables('adDSCTemplate')]",
           "configurationFunction": "[variables('adDSCConfigurationFunction')]",
           "properties": [
+            {
+              "Name": "Subject",
+              "Value": "[variables('WAPPubIpDnsFQDN')]",
+              "TypeName": "System.String"
+            },
             {
               "Name": "AdminCreds",
               "Value": {
