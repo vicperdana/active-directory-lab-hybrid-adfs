@@ -10,16 +10,16 @@ Import-Module Azure -ErrorAction SilentlyContinue
 
     # Must be unique for simultaneous/co-existing deployments
     #"master" or "dev"
-    $RGName                  = "rg-ddlabtest"
+    $RGName                  = "rg-hybridadlab"
     $DeployRegion            = "eastus"
 
     $Branch                  = "master"
     #$AssetLocation           = "https://raw.githubusercontent.com/Azure-Samples/active-directory-lab-hybrid-adfs/$Branch/lab-hybrid-adfs/"
     $AssetLocation           = "https://raw.githubusercontent.com/vicperdana/active-directory-lab-hybrid-adfs/master/lab-hybrid-phs/"
 
-    $userName                = "didata"
+    $userName                = "vperdana"
     $secpasswd               = 'Pass1234##!!'
-    $adDomainName            = "euc11.lab"
+    $adDomainName            = "vphybridad.lab"
     $usersArray              = @(
                                 @{ "FName"= "Bob";  "LName"= "Jones";    "SAM"= "bjones" },
                                 @{ "FName"= "Bill"; "LName"= "Smith";    "SAM"= "bsmith" },
