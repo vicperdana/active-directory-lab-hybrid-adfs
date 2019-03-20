@@ -19,7 +19,7 @@ Import-Module Azure -ErrorAction SilentlyContinue
 
     $userName                = "didata"
     $secpasswd               = 'Pass1234##!!'
-    $adDomainName            = "euc11.lab"
+    $adDomainName            = "eucx1.lab"
     $usersArray              = @(
                                 @{ "FName"= "Bob";  "LName"= "Jones";    "SAM"= "bjones" },
                                 @{ "FName"= "Bill"; "LName"= "Smith";    "SAM"= "bsmith" },
