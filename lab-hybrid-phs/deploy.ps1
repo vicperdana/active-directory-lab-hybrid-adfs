@@ -10,7 +10,7 @@ Import-Module Azure -ErrorAction SilentlyContinue
 
     # Must be unique for simultaneous/co-existing deployments
     #"master" or "dev"
-    $RGName                  = "rg-ddlabtest"
+    $RGName                  = "rg-ddlabtest1"
     $DeployRegion            = "eastus"
 
     $Branch                  = "master"
